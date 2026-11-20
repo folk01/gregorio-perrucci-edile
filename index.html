@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101010">
+<meta name="description" content="Gestione preventivi edili - Gregorio Perrucci">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Gregorio Perrucci | Preventivi Edili</title>
+<style>
+:root{--bg:#101010;--panel:#1a1a1a;--panel2:#222;--gold:#d6ad55;--gold2:#f0d28a;--text:#f5f2eb;--muted:#aaa49a;--line:#38342b;--danger:#d96b62}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0c0c0c,#171717 55%,#0d0d0d);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:35px}
+header{padding:22px 18px 17px;border-bottom:1px solid var(--line);background:#111;position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:13px;max-width:900px;margin:auto}.brand svg{width:58px;height:58px;flex:none}.brand h1{font-size:18px;letter-spacing:1.1px;margin:0;color:var(--gold2)}.brand p{margin:4px 0 0;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+main{max-width:900px;margin:0 auto;padding:18px 14px}.hero{border:1px solid #66532e;border-radius:18px;padding:19px;background:linear-gradient(130deg,#242018,#171717 70%);margin-bottom:17px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}.hero h2{font-size:25px;line-height:1.15;margin:8px 0}.hero p{color:var(--muted);margin:0;font-size:13px}
+.tabs{display:flex;gap:8px;margin:15px 0;overflow:auto}.tab{border:1px solid var(--line);border-radius:999px;padding:10px 15px;color:var(--muted);background:#181818;font-weight:650;white-space:nowrap}.tab.active{background:var(--gold);color:#17130b;border-color:var(--gold)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}.card h3{margin:0 0 14px;font-size:16px;color:var(--gold2)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,textarea,select{width:100%;background:#101010;color:var(--text);border:1px solid #45413a;border-radius:10px;padding:12px;font:inherit;font-size:14px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--gold)}textarea{min-height:70px;resize:vertical}
+button{font:inherit;cursor:pointer}.primary{background:var(--gold);color:#17130b;border:0;border-radius:11px;padding:13px 16px;font-weight:800}.secondary{background:#26231d;color:var(--gold2);border:1px solid #66532e;border-radius:11px;padding:11px 13px;font-weight:700}.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:9px 12px}.danger{color:#ffaaa2;border-color:#70423e}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.actions button{flex:1}
+.item{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#151515}.itemtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.itemtop strong{font-size:13px;color:var(--gold2)}.itemgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.itemgrid .field:first-child{grid-column:1/-1}
+.totalbox{background:#111;border:1px solid #5b4929;border-radius:13px;padding:14px;margin-top:14px}.totalrow{display:flex;justify-content:space-between;padding:5px 0;color:var(--muted);font-size:14px}.totalrow.final{border-top:1px solid var(--line);margin-top:7px;padding-top:12px;color:var(--gold2);font-weight:850;font-size:20px}
+.quote{border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0;display:flex;justify-content:space-between;gap:10px;align-items:center}.quote small{color:var(--muted);display:block;margin-top:4px}.quote b{color:var(--gold2)}.empty{text-align:center;color:var(--muted);padding:28px 10px}
+.hidden{display:none!important}.note{color:var(--muted);font-size:11px;line-height:1.5;margin-top:12px}
+footer{text-align:center;color:#777;font-size:11px;padding:18px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.itemgrid{grid-template-columns:1fr 1fr}.itemgrid .field:first-child{grid-column:1/-1}.brand h1{font-size:16px}.hero h2{font-size:22px}}
+@media print{
+ body{background:white!important;color:#111!important;padding:0}header,.hero,.tabs,.no-print,footer{display:none!important}main{padding:0;max-width:none}.card{background:white!important;color:#111!important;border:0!important;padding:0!important}.card h3{color:#8b6723!important}.field label{color:#555!important}input,textarea,select{border:0!important;background:white!important;color:#111!important;padding:3px 0!important}.item{background:white!important;border:1px solid #ddd!important;break-inside:avoid}.itemtop strong,.totalrow.final{color:#8b6723!important}.totalbox{background:white!important;border:1px solid #aaa!important}.totalrow{color:#333!important}.quotehead{display:block!important}.print-brand{display:flex!important;align-items:center;gap:12px;border-bottom:2px solid #b58b3e;padding-bottom:12px;margin-bottom:18px}.print-brand svg{width:55px}.print-brand h2{margin:0;color:#76551b}.print-brand p{margin:3px 0;color:#555;font-size:11px}.print-only{display:block!important}
+}
+.print-brand,.print-only{display:none}
+</style>
+</head>
+<body>
+<header><div class="brand">
+<svg viewBox="0 0 100 100" role="img" aria-label="Logo Gregorio Perrucci">
+ <path d="M12 82V43L50 13l38 30v39H66V54H34v28z" fill="none" stroke="#d6ad55" stroke-width="5" stroke-linejoin="round"/>
+ <path d="M24 43h52M43 82V59h14v23" fill="none" stroke="#f0d28a" stroke-width="4"/>
+ <path d="M8 89h84" stroke="#d6ad55" stroke-width="3"/>
+</svg>
+<div><h1>GREGORIO PERRUCCI</h1><p>Impresa edile · Preventivi</p></div>
+</div></header>
+<main>
+<section class="hero">
+ <div class="eyebrow">Gestione aziendale</div>
+ <h2>Preventivi chiari.<br> Lavori fatti a regola d'arte.</h2>
+ <p>Prepara, salva e stampa preventivi professionali direttamente dal telefono.</p>
+</section>
+<div class="tabs no-print">
+ <button class="tab active" data-tab="editor">Nuovo preventivo</button>
+ <button class="tab" data-tab="archive">Archivio</button>
+</div>
+
+<section id="editor">
+<div class="print-brand">
+<svg viewBox="0 0 100 100"><path d="M12 82V43L50 13l38 30v39H66V54H34v28z" fill="none" stroke="#b58b3e" stroke-width="5"/><path d="M24 43h52M43 82V59h14v23" fill="none" stroke="#b58b3e" stroke-width="4"/></svg>
+<div><h2>GREGORIO PERRUCCI</h2><p>IMPRESA EDILE · Tel. 353 462 1294</p></div>
+</div>
+<div class="card">
+<h3>1. Dati del cliente</h3>
+<div class="grid">
+ <div class="field"><label>Nome e cognome / Azienda</label><input id="client" placeholder="Es. Mario Rossi"></div>
+ <div class="field"><label>Telefono</label><input id="clientPhone" type="tel" placeholder="Telefono cliente"></div>
+ <div class="field full"><label>Indirizzo del lavoro</label><input id="address" placeholder="Via, città e CAP"></div>
+ <div class="field"><label>Numero preventivo</label><input id="quoteNo"></div>
+ <div class="field"><label>Data</label><input id="quoteDate" type="date"></div>
+</div>
+</div>
+<div class="card">
+<h3>2. Lavorazioni e materiali</h3>
+<div id="items"></div>
+<button class="secondary no-print" id="addItem">＋ Aggiungi lavorazione</button>
+<div class="field full" style="margin-top:13px"><label>Note e condizioni (facoltativo)</label><textarea id="notes" placeholder="Tempi di esecuzione, modalità di pagamento, esclusioni, validità del preventivo..."></textarea></div>
+<div class="grid" style="margin-top:12px">
+ <div class="field"><label>IVA</label><select id="vat"><option value="22">22%</option><option value="10">10%</option><option value="4">4%</option><option value="0">Esente / non applicata (verificare il caso)</option></select></div>
+ <div class="field"><label>Sconto (€)</label><input id="discount" type="number" min="0" step=".01" value="0"></div>
+</div>
+<div class="totalbox">
+ <div class="totalrow"><span>Subtotale</span><b id="subtotal">€ 0,00</b></div>
+ <div class="totalrow"><span>Sconto</span><b id="discountView">− € 0,00</b></div>
+ <div class="totalrow"><span>Imponibile</span><b id="taxable">€ 0,00</b></div>
+ <div class="totalrow"><span>IVA (<span id="vatLabel">22</span>%)</span><b id="vatAmount">€ 0,00</b></div>
+ <div class="totalrow final"><span>TOTALE</span><span id="grandTotal">€ 0,00</span></div>
+</div>
+<div class="actions no-print">
+ <button class="primary" id="pdfBtn">Genera PDF / Stampa</button>
+ <button class="secondary" id="saveBtn">Salva preventivo</button>
+</div>
+<p class="note">Il PDF viene creato tramite la funzione di stampa del telefono: scegli “Salva come PDF”. Verifica sempre aliquota IVA, imponibile e condizioni fiscali prima di consegnare il preventivo.</p>
+</div>
+</section>
+
+<section id="archive" class="hidden">
+<div class="card">
+<h3>Archivio preventivi</h3>
+<div id="quoteList"></div>
+<p class="note">I dati sono conservati sul dispositivo in uso. Esporta o stampa i preventivi importanti e non cancellare i dati del browser senza averne una copia.</p>
+</div>
+</section>
+</main>
+<footer>GREGORIO PERRUCCI · IMPRESA EDILE · 353 462 1294</footer>
+<script>
+const $=id=>document.getElementById(id);
+const euro=n=>new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(Number(n)||0);
+let itemCounter=0, editingId=null;
+function dateToday(){return new Date().toISOString().slice(0,10)}
+function newQuoteNo(){return 'GP-'+new Date().toISOString().slice(0,10).replaceAll('-','')+'-'+String(Date.now()).slice(-4)}
+$('quoteDate').value=dateToday(); $('quoteNo').value=newQuoteNo();
+function addItem(desc='',qty=1,unit='mq',price=0){
+ const id=++itemCounter, div=document.createElement('div');div.className='item';div.dataset.id=id;
+ div.innerHTML=`<div class="itemtop"><strong>Lavorazione ${id}</strong><button class="ghost danger no-print remove">Rimuovi</button></div>
+ <div class="itemgrid">
+ <div class="field"><label>Descrizione</label><input class="desc" placeholder="Es. Ripristino faccia a vista" value="${escapeAttr(desc)}"></div>
+ <div class="field"><label>Quantità</label><input class="qty" type="number" min="0" step="0.01" value="${qty}"></div>
+ <div class="field"><label>Unità</label><select class="unit">${['mq','ml','mc','ore','giorni','pezzi','corpo'].map(x=>`<option ${x===unit?'selected':''}>${x}</option>`).join('')}</select></div>
+ <div class="field"><label>Prezzo unitario (€)</label><input class="price" type="number" min="0" step="0.01" value="${price}"></div>
+ </div><div class="totalrow"><span>Totale lavorazione</span><b class="lineTotal">€ 0,00</b></div>`;
+ $('items').appendChild(div);
+ div.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calculate));
+ div.querySelector('.remove').addEventListener('click',()=>{div.remove();calculate()});
+ calculate();
+}
+function escapeAttr(s){return String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;')}
+function getLines(){return [...document.querySelectorAll('.item')].map(el=>({desc:el.querySelector('.desc').value,qty:Number(el.querySelector('.qty').value)||0,unit:el.querySelector('.unit').value,price:Number(el.querySelector('.price').value)||0}))}
+function totals(){
+ const subtotal=getLines().reduce((a,x)=>a+x.qty*x.price,0),discount=Math.min(subtotal,Math.max(0,Number($('discount').value)||0)),taxable=subtotal-discount,vat=taxable*(Number($('vat').value)||0)/100;
+ return {subtotal,discount,taxable,vat,total:taxable+vat};
+}
+function calculate(){
+ const t=totals();document.querySelectorAll('.item').forEach(el=>{const q=Number(el.querySelector('.qty').value)||0,p=Number(el.querySelector('.price').value)||0;el.querySelector('.lineTotal').textContent=euro(q*p)});
+ $('subtotal').textContent=euro(t.subtotal);$('discountView').textContent='− '+euro(t.discount);$('taxable').textContent=euro(t.taxable);$('vatAmount').textContent=euro(t.vat);$('grandTotal').textContent=euro(t.total);$('vatLabel').textContent=$('vat').value;
+}
+$('addItem').addEventListener('click',()=>addItem());
+$('discount').addEventListener('input',calculate);$('vat').addEventListener('change',calculate);
+function data(){return {id:editingId||String(Date.now()),client:$('client').value,clientPhone:$('clientPhone').value,address:$('address').value,quoteNo:$('quoteNo').value,quoteDate:$('quoteDate').value,notes:$('notes').value,vat:$('vat').value,discount:$('discount').value,lines:getLines(),totals:totals(),savedAt:new Date().toISOString()}}
+function validate(){if(!$('client').value.trim()){alert('Inserisci il nome del cliente.');$('client').focus();return false}if(!getLines().some(x=>x.desc.trim())){alert('Inserisci almeno una lavorazione.');return false}return true}
+function getArchive(){try{return JSON.parse(localStorage.getItem('gp_quotes')||'[]')}catch(e){return []}}
+function setArchive(a){localStorage.setItem('gp_quotes',JSON.stringify(a))}
+$('saveBtn').addEventListener('click',()=>{if(!validate())return;const d=data(),a=getArchive(),i=a.findIndex(x=>x.id===d.id);if(i>=0)a[i]=d;else a.unshift(d);setArchive(a);editingId=d.id;alert('Preventivo salvato sul dispositivo.');renderArchive()});
+$('pdfBtn').addEventListener('click',()=>{if(!validate())return;window.print()});
+function renderArchive(){
+ const a=getArchive();$('quoteList').innerHTML='';
+ if(!a.length){$('quoteList').innerHTML='<div class="empty">Nessun preventivo salvato.<br>Crea il primo dalla scheda “Nuovo preventivo”.</div>';return}
+ a.forEach(q=>{const el=document.createElement('div');el.className='quote';const left=document.createElement('div'),right=document.createElement('div');left.innerHTML=`<b>${escapeAttr(q.client||'Cliente')}</b><small>${escapeAttr(q.quoteNo||'')} · ${escapeAttr(q.quoteDate||'')}</small>`;right.innerHTML=`<b>${euro(q.totals?.total||0)}</b>`;const btn=document.createElement('button');btn.className='ghost';btn.textContent='Apri';btn.onclick=()=>loadQuote(q.id);right.appendChild(btn);el.append(left,right);$('quoteList').appendChild(el)})
+}
+function loadQuote(id){
+ const q=getArchive().find(x=>x.id===id);if(!q)return;editingId=q.id;
+ $('client').value=q.client||'';$('clientPhone').value=q.clientPhone||'';$('address').value=q.address||'';$('quoteNo').value=q.quoteNo||'';$('quoteDate').value=q.quoteDate||dateToday();$('notes').value=q.notes||'';$('vat').value=q.vat??'22';$('discount').value=q.discount||0;$('items').innerHTML='';itemCounter=0;(q.lines||[]).forEach(x=>addItem(x.desc,x.qty,x.unit,x.price));if(!(q.lines||[]).length)addItem();calculate();switchTab('editor');
+}
+function switchTab(tab){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));$('editor').classList.toggle('hidden',tab!=='editor');$('archive').classList.toggle('hidden',tab!=='archive');if(tab==='archive')renderArchive()}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+addItem('Lavorazione edile',1,'corpo',0);
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>
