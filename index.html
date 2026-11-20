@@ -19,7 +19,7 @@ main{max-width:900px;margin:0 auto;padding:18px 14px}.hero{border:1px solid #665
 button{font:inherit;cursor:pointer}.primary{background:var(--gold);color:#17130b;border:0;border-radius:11px;padding:13px 16px;font-weight:800}.secondary{background:#26231d;color:var(--gold2);border:1px solid #66532e;border-radius:11px;padding:11px 13px;font-weight:700}.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:9px 12px}.danger{color:#ffaaa2;border-color:#70423e}
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.actions button{flex:1}
 .item{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#151515}.itemtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.itemtop strong{font-size:13px;color:var(--gold2)}.itemgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.itemgrid .field:first-child{grid-column:1/-1}
-.totalbox{background:#111;border:1px solid #5b4929;border-radius:13px;padding:14px;margin-top:14px}.totalrow{display:flex;justify-content:space-between;padding:5px 0;color:var(--muted);font-size:14px}.totalrow.final{border-top:1px solid var(--line);margin-top:7px;padding-top:12px;color:var(--gold2);font-weight:850;font-size:20px}
+.totalbox{background:#111;border:1px solid #5b4929;border-radius:13px;padding:14px;margin-top:14px}.totalrow{display:flex;justify-content:space-between;padding:5px 0;color:var(--muted);font-size:14px}.totalrow.final{border-top:1px solid var(--line);margin-top:7px;padding-top:12px;color:var(--gold2);font-weight:850;font-size:20px}.totalrow.deposit{color:var(--gold2);font-weight:750}.deposit-field{max-width:125px;margin:10px 0 4px auto}.deposit-field input{text-align:right;padding:8px}
 .quote{border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0;display:flex;justify-content:space-between;gap:10px;align-items:center}.quote small{color:var(--muted);display:block;margin-top:4px}.quote b{color:var(--gold2)}.empty{text-align:center;color:var(--muted);padding:28px 10px}
 .hidden{display:none!important}.note{color:var(--muted);font-size:11px;line-height:1.5;margin-top:12px}
 footer{text-align:center;color:#777;font-size:11px;padding:18px}
@@ -80,6 +80,9 @@ footer{text-align:center;color:#777;font-size:11px;padding:18px}
  <div class="totalrow"><span>Imponibile</span><b id="taxable">€ 0,00</b></div>
  <div class="totalrow"><span>IVA (<span id="vatLabel">22</span>%)</span><b id="vatAmount">€ 0,00</b></div>
  <div class="totalrow final"><span>TOTALE</span><span id="grandTotal">€ 0,00</span></div>
+ <div class="field deposit-field"><label for="depositPercent">Acconto richiesto (%)</label><input id="depositPercent" type="number" min="0" max="100" step="1" value="30"></div>
+ <div class="totalrow deposit"><span>Acconto da versare</span><b id="depositAmount">€ 0,00</b></div>
+ <div class="totalrow deposit"><span>Saldo rimanente</span><b id="balanceAmount">€ 0,00</b></div>
 </div>
 <div class="actions no-print">
  <button class="primary" id="pdfBtn">Genera PDF / Stampa</button>
@@ -123,15 +126,16 @@ function escapeAttr(s){return String(s).replaceAll('&','&amp;').replaceAll('"','
 function getLines(){return [...document.querySelectorAll('.item')].map(el=>({desc:el.querySelector('.desc').value,qty:Number(el.querySelector('.qty').value)||0,unit:el.querySelector('.unit').value,price:Number(el.querySelector('.price').value)||0}))}
 function totals(){
  const subtotal=getLines().reduce((a,x)=>a+x.qty*x.price,0),discount=Math.min(subtotal,Math.max(0,Number($('discount').value)||0)),taxable=subtotal-discount,vat=taxable*(Number($('vat').value)||0)/100;
- return {subtotal,discount,taxable,vat,total:taxable+vat};
+ const total=taxable+vat,depositPercent=Math.min(100,Math.max(0,Number($('depositPercent').value)||0)),deposit=total*depositPercent/100,balance=total-deposit;
+ return {subtotal,discount,taxable,vat,total,depositPercent,deposit,balance};
 }
 function calculate(){
  const t=totals();document.querySelectorAll('.item').forEach(el=>{const q=Number(el.querySelector('.qty').value)||0,p=Number(el.querySelector('.price').value)||0;el.querySelector('.lineTotal').textContent=euro(q*p)});
- $('subtotal').textContent=euro(t.subtotal);$('discountView').textContent='− '+euro(t.discount);$('taxable').textContent=euro(t.taxable);$('vatAmount').textContent=euro(t.vat);$('grandTotal').textContent=euro(t.total);$('vatLabel').textContent=$('vat').value;
+ $('subtotal').textContent=euro(t.subtotal);$('discountView').textContent='− '+euro(t.discount);$('taxable').textContent=euro(t.taxable);$('vatAmount').textContent=euro(t.vat);$('grandTotal').textContent=euro(t.total);$('vatLabel').textContent=$('vat').value;$('depositAmount').textContent=euro(t.deposit);$('balanceAmount').textContent=euro(t.balance);
 }
 $('addItem').addEventListener('click',()=>addItem());
-$('discount').addEventListener('input',calculate);$('vat').addEventListener('change',calculate);
-function data(){return {id:editingId||String(Date.now()),client:$('client').value,clientPhone:$('clientPhone').value,address:$('address').value,quoteNo:$('quoteNo').value,quoteDate:$('quoteDate').value,notes:$('notes').value,vat:$('vat').value,discount:$('discount').value,lines:getLines(),totals:totals(),savedAt:new Date().toISOString()}}
+$('discount').addEventListener('input',calculate);$('vat').addEventListener('change',calculate);$('depositPercent').addEventListener('input',calculate);
+function data(){return {id:editingId||String(Date.now()),client:$('client').value,clientPhone:$('clientPhone').value,address:$('address').value,quoteNo:$('quoteNo').value,quoteDate:$('quoteDate').value,notes:$('notes').value,vat:$('vat').value,discount:$('discount').value,depositPercent:$('depositPercent').value,lines:getLines(),totals:totals(),savedAt:new Date().toISOString()}}
 function validate(){if(!$('client').value.trim()){alert('Inserisci il nome del cliente.');$('client').focus();return false}if(!getLines().some(x=>x.desc.trim())){alert('Inserisci almeno una lavorazione.');return false}return true}
 function getArchive(){try{return JSON.parse(localStorage.getItem('gp_quotes')||'[]')}catch(e){return []}}
 function setArchive(a){localStorage.setItem('gp_quotes',JSON.stringify(a))}
@@ -144,7 +148,7 @@ function renderArchive(){
 }
 function loadQuote(id){
  const q=getArchive().find(x=>x.id===id);if(!q)return;editingId=q.id;
- $('client').value=q.client||'';$('clientPhone').value=q.clientPhone||'';$('address').value=q.address||'';$('quoteNo').value=q.quoteNo||'';$('quoteDate').value=q.quoteDate||dateToday();$('notes').value=q.notes||'';$('vat').value=q.vat??'22';$('discount').value=q.discount||0;$('items').innerHTML='';itemCounter=0;(q.lines||[]).forEach(x=>addItem(x.desc,x.qty,x.unit,x.price));if(!(q.lines||[]).length)addItem();calculate();switchTab('editor');
+ $('client').value=q.client||'';$('clientPhone').value=q.clientPhone||'';$('address').value=q.address||'';$('quoteNo').value=q.quoteNo||'';$('quoteDate').value=q.quoteDate||dateToday();$('notes').value=q.notes||'';$('vat').value=q.vat??'22';$('discount').value=q.discount||0;$('depositPercent').value=q.depositPercent??30;$('items').innerHTML='';itemCounter=0;(q.lines||[]).forEach(x=>addItem(x.desc,x.qty,x.unit,x.price));if(!(q.lines||[]).length)addItem();calculate();switchTab('editor');
 }
 function switchTab(tab){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));$('editor').classList.toggle('hidden',tab!=='editor');$('archive').classList.toggle('hidden',tab!=='archive');if(tab==='archive')renderArchive()}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
